@@ -26,3 +26,9 @@ resource "aws_s3_bucket" "demo" {
     Day       = "89"
   }
 }
+resource "aws_s3_bucket_versioning" "demo" {
+  bucket = aws_s3_bucket.demo.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
