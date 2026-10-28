@@ -1,20 +1,16 @@
 name: terraform
-
 on:
   pull_request:
     paths: ["pipeline-demo/**"]
   push:
     branches: [main]
     paths: ["pipeline-demo/**"]
-
 permissions:
   id-token: write
   contents: read
-
 defaults:
   run:
     working-directory: pipeline-demo
-
 jobs:
   plan:
     runs-on: ubuntu-latest
@@ -22,7 +18,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
       - uses: hashicorp/setup-terraform@v3
       - run: terraform fmt -check
@@ -34,7 +31,6 @@ jobs:
         with:
           name: tfplan
           path: pipeline-demo/tfplan
-
   apply:
     needs: plan
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -44,7 +40,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
       - uses: hashicorp/setup-terraform@v3
       - uses: actions/download-artifact@v4
