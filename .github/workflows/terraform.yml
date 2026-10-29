@@ -21,38 +21,32 @@ defaults:
 
 jobs:
   plan:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::829999272172:role/GitHubActionsTerraformRole
           aws-region: eu-central-1
           role-session-name: GitHubActions-Terraform-Plan
-
       - uses: hashicorp/setup-terraform@v3
-
       - run: terraform fmt -check
       - run: terraform init
       - run: terraform validate
       - run: terraform plan -out=tfplan
 
   apply:
-    needs: plan
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: production
     steps:
       - uses: actions/checkout@v4
-
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::829999272172:role/GitHubActionsTerraformRole
           aws-region: eu-central-1
           role-session-name: GitHubActions-Terraform-Apply
-
       - uses: hashicorp/setup-terraform@v3
-
       - run: terraform init
       - run: terraform apply -auto-approve
