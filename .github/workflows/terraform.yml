@@ -48,3 +48,22 @@ jobs:
       - uses: hashicorp/setup-terraform@v3
       - run: terraform init
       - run: terraform apply -auto-approve
+  debug-oidc:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/github-script@v6
+        id: oidc
+        with:
+          script: |
+            const token = await core.getIDToken('sts.amazonaws.com')
+            const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())
+            console.log("=== OIDC PAYLOAD ===")
+            console.log(JSON.stringify(payload, null, 2))
+            console.log("=== SUB ===", payload.sub)
+            console.log("=== AUD ===", payload.aud)
+            console.log("=== JOB_WORKFLOW_REF ===", payload.job_workflow_ref)
