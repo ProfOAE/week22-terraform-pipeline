@@ -33,3 +33,4 @@ resource "aws_s3_bucket_versioning" "demo" {
   }
 }
   # test OIDC secure policy
+# fix trust remove job_workflow_ref
