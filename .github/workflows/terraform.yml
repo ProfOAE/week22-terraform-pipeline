@@ -1,12 +1,12 @@
 name: terraform
 on:
   pull_request:
-    paths: 
+    paths:
       - "pipeline-demo/**"
       - ".github/workflows/**"
   push:
     branches: [main]
-    paths: 
+    paths:
       - "pipeline-demo/**"
       - ".github/workflows/**"
 
@@ -24,10 +24,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          role-to-assume: arn:aws:iam::829999272172:role/GitHubActionsTerraformRole
           aws-region: eu-central-1
           role-session-name: GitHubActions-Terraform-Plan
 
@@ -48,7 +48,7 @@ jobs:
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          role-to-assume: arn:aws:iam::829999272172:role/GitHubActionsTerraformRole
           aws-region: eu-central-1
           role-session-name: GitHubActions-Terraform-Apply
 
