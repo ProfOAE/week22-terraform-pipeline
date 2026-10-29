@@ -32,3 +32,4 @@ resource "aws_s3_bucket_versioning" "demo" {
     status = "Enabled"
   }
 }
+  # test OIDC secure policy
