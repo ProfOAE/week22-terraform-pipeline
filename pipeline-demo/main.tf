@@ -36,3 +36,4 @@ resource "aws_s3_bucket_versioning" "demo" {
 # fix trust remove job_workflow_ref
 # final OIDC fix
 # trigger run 9 after bypass gate fix
+# run 11 - new OIDC @ID format fixed
