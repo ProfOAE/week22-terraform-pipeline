@@ -14,7 +14,6 @@ defaults:
     working-directory: pipeline-demo
 jobs:
   plan:
-    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -30,6 +29,7 @@ jobs:
       - run: terraform validate
       - run: terraform plan -out=tfplan
   apply:
+    needs: plan
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: production
