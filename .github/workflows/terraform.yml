@@ -1,36 +1,43 @@
 name: terraform
 on:
   pull_request:
-    paths: ["pipeline-demo/**"]
+    paths: 
+      - "pipeline-demo/**"
+      - ".github/workflows/**"
   push:
     branches: [main]
-    paths: ["pipeline-demo/**"]
+    paths: 
+      - "pipeline-demo/**"
+      - ".github/workflows/**"
+
 permissions:
   id-token: write
   contents: read
+  pull-requests: write
+
 defaults:
   run:
     working-directory: pipeline-demo
+
 jobs:
   plan:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
           aws-region: eu-central-1
+          role-session-name: GitHubActions-Terraform-Plan
+
       - uses: hashicorp/setup-terraform@v3
+
       - run: terraform fmt -check
       - run: terraform init
       - run: terraform validate
       - run: terraform plan -out=tfplan
-      - uses: actions/upload-artifact@v4
-        if: github.event_name == 'push'
-        with:
-          name: tfplan
-          path: pipeline-demo/tfplan
+
   apply:
     needs: plan
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -38,15 +45,14 @@ jobs:
     environment: production
     steps:
       - uses: actions/checkout@v4
+
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
           aws-region: eu-central-1
+          role-session-name: GitHubActions-Terraform-Apply
+
       - uses: hashicorp/setup-terraform@v3
-      - uses: actions/download-artifact@v4
-        with:
-          name: tfplan
-          path: pipeline-demo
+
       - run: terraform init
-      - run: terraform apply tfplan
+      - run: terraform apply -auto-approve
