@@ -32,10 +32,7 @@ resource "aws_s3_bucket_versioning" "demo" {
     status = "Enabled"
   }
 }
-  # test OIDC secure policy
+# test OIDC secure policy
 # fix trust remove job_workflow_ref
 # final OIDC fix
 # trigger run 9 after bypass gate fix
-# run 11 - new OIDC @ID format fixed
-# run 12 - fix slash vs colon typo
-# fix ref:refs/heads/main for plan
