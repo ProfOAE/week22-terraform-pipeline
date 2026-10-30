@@ -22,8 +22,8 @@ provider "aws" {
 resource "aws_s3_bucket" "demo" {
   bucket = "tobi-day85-829999272172-pipeline-demo"
   tags = {
-    ManagedBy = "terraform-pipeline"
-    Day       = "89"
+    ManagedBy   = "terraform-pipeline"
+    Day         = "89"
     Environment = "dev"
   }
 }
