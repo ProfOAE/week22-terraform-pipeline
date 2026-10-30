@@ -24,6 +24,7 @@ resource "aws_s3_bucket" "demo" {
   tags = {
     ManagedBy = "terraform-pipeline"
     Day       = "89"
+    Environment = "dev"
   }
 }
 resource "aws_s3_bucket_versioning" "demo" {
