@@ -22,7 +22,6 @@ jobs:
           role-to-assume: arn:aws:iam::829999272172:role/GitHubActionsTerraformRole
           aws-region: eu-central-1
           role-session-name: GitHubActions-Terraform-Plan
-          role-skip-session-tagging: true
       - uses: hashicorp/setup-terraform@v3
       - run: terraform fmt -check
       - run: terraform init
@@ -40,7 +39,6 @@ jobs:
           role-to-assume: arn:aws:iam::829999272172:role/GitHubActionsTerraformRole
           aws-region: eu-central-1
           role-session-name: GitHubActions-Terraform-Apply
-          role-skip-session-tagging: true
       - uses: hashicorp/setup-terraform@v3
       - run: terraform init
       - run: terraform apply -auto-approve
